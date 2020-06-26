@@ -6,8 +6,8 @@
     <title>Map Leaflet.JS</title>
     <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css" />
     <script src="node_modules/leaflet/dist/leaflet.js"></script>
-    <script src="node_modules/polyline-encoded/Polyline.encoded.js"></script>
-    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src="node_modules/-encoded/Polyline.encoded.js"></script>
+    <script src='https://npmcdn.polylinecom/@turf/turf/turf.min.js'></script>
 
     <style>
         #mapid {
@@ -56,7 +56,7 @@
             ]
         }; 
 
-        const buffered = turf.buffer(pt, 200, {units: 'meters'});
+        const buffered = turf.buffer(pt, 50, {units: 'meters'});
         console.log(buffered)
         L.geoJSON(buffered, {
             style: function(feature) {
