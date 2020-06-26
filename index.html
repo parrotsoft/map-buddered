@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Leaflet.JS</title>
+    <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css" />
+    <script src="node_modules/leaflet/dist/leaflet.js"></script>
+    <script src="node_modules/polyline-encoded/Polyline.encoded.js"></script>
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+
+    <style>
+        #mapid {
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="mapid"></div>
+
+    <script>
+
+        const path_rute = '_cg|CrenhN}ADwABDpIcKV?t@LnG_KPD`EBjCgEF}DBuC?e@Aq@HkCl@uBjAaBbAc@|@gClBH~H~D?FzHL|MHdGLnKFbG?xAJzF\\r]DfFH`EDfBPnA\\rAVtAR|@FzA@fDPhSHrJBtAJvNHlPBbD?d@Hr@HhCBtDRzRBX?tBJvFFjMLtLFvFP`OJfLDpEeLN?pAFtM_CDF]MiMAy@~SUtFKbHOdLQ`JU?mCOaPK_MMyKEoKOuNIeIMqJOsPMgKIgLKsHKqOIyJI}KI{KSoQIcIIkLG}GQcQ?kLEaHOuLO_Q[e\\CsAjFQpIKO{I_ED';
+        
+        const mymap = L.map('mapid').setView([25.761681, -80.191788], 13);
+        L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        }).addTo(mymap);
+        mymap.zoomControl.setPosition('bottomright');
+
+        const latlngs = L.PolylineUtil.decode(path_rute);
+        const polyline = L.polyline(latlngs, {
+            color: '#ff0000' 
+        }).addTo(mymap);
+        mymap.fitBounds(polyline.getBounds());
+
+        let coords = [];
+        latlngs.forEach(element => {
+            coords.push([element[1], element[0,0]]);
+        });
+
+        const pt = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": coords
+                    },
+                    "properties": {
+                        "name": "\n"
+                    }
+                }
+            ]
+        }; 
+
+        const buffered = turf.buffer(pt, 200, {units: 'meters'});
+        L.geoJSON(buffered, {
+            style: function(feature) {
+                return {
+                    color: 'blue'
+                };
+            }
+        }).addTo(mymap);
+     
+        mymap.on('click', (event) => {
+            console.log(JSON.stringify(event.latlng,null,1));
+            // const pt = turf.point([Number(event.lng), Number(event.lat)])
+            //const is = turf.booleanPointInPolygon(pt, polygon);
+                       
+        });
+
+    </script>
+</body>
+</html>
