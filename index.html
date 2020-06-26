@@ -37,7 +37,7 @@
 
         let coords = [];
         latlngs.forEach(element => {
-            coords.push([element[1], element[0,0]]);
+            coords.push([element[1], element[0]]);
         });
 
         const pt = {
@@ -57,6 +57,7 @@
         }; 
 
         const buffered = turf.buffer(pt, 200, {units: 'meters'});
+        console.log(buffered)
         L.geoJSON(buffered, {
             style: function(feature) {
                 return {
@@ -66,10 +67,9 @@
         }).addTo(mymap);
      
         mymap.on('click', (event) => {
-            console.log(JSON.stringify(event.latlng,null,1));
-            // const pt = turf.point([Number(event.lng), Number(event.lat)])
-            //const is = turf.booleanPointInPolygon(pt, polygon);
-                       
+            const pts = turf.point([event.latlng.lng, event.latlng.lat])
+            const is = turf.booleanPointInPolygon(pts, turf.polygon(buffered.features[0].geometry.coordinates));
+            alert(is)
         });
 
     </script>
